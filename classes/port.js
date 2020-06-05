@@ -12,11 +12,10 @@ class Port {
             let message = new Message(e);
 
             if (message.type == "response" && this.queue.exists(message.id)) {
-                this.queue.get(message.id)(message);
+                this.queue.get(message.id)(message.data);
             } else if (typeof this.incomming == "function") {
-                let response = new Message({type: "response", id: message.id});
-                this.incomming(message, response).then(() => {
-                    this.send(response);
+                this.incomming(message).then((data) => {
+                    this.send(message.respond(data));
                 });
             } else console.error(`Uncaught message: ${JSON.stringify(message)}`);
         }

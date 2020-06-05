@@ -1,23 +1,24 @@
 import {Port} from "../classes/port.js";
 
-new Port(self, (message, response) => {
+new Port(self, (message) => {
     return new Promise((resolve) => {
         let {a, b} = message.data;
+        let result;
         switch (message.type) {
             case "multiply":
-                response.data = a * b;
+                result = a * b;
                 break;
             case "divide":
-                response.data = a / b;
+                result = a / b;
                 break;
             case "add":
-                response.data = a + b;
+                result = a + b;
                 break;
             case "divide":
-                response.data = a - b;
+                result = a - b;
                 break;
         }
 
-        setTimeout(resolve, 5000);
+        setTimeout(resolve, 5000, result);
     });
 });

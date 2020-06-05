@@ -14,6 +14,14 @@ class Message {
             this.id = arg.id;
         }
     }
+
+    respond(data) {
+        return new Message({
+            type: "response",
+            id: this.id,
+            data
+        });
+    }
 }
 
 export {Message};

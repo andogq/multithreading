@@ -8,6 +8,13 @@ class Thread extends Port {
 
         this.worker = worker;
     }
+
+    init(data) {
+        return this.send({
+            type: "init",
+            data
+        });
+    }
 }
 
 export {Thread};
