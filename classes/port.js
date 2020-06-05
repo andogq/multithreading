@@ -10,11 +10,12 @@ class Port {
 
         this.port.onmessage = (e) => {
             let message = new Message(e);
+            let object = e.ports ? e.ports[0] : undefined;
 
             if (message.type == "response" && this.queue.exists(message.id)) {
                 this.queue.get(message.id)(message.data);
             } else if (typeof this.incomming == "function") {
-                this.incomming(message).then((data) => {
+                this.incomming(message, object).then((data) => {
                     this.send(message.respond(data));
                 });
             } else console.error(`Uncaught message: ${JSON.stringify(message)}`);
@@ -38,6 +39,16 @@ class Port {
 
         this.port.postMessage(message);
         return out;
+    }
+
+    transfer(object) {
+        return new Promise((resolve) => {
+            let id = this.queue.add(resolve);
+
+            let message = new Message({type: "transfer", id});
+
+            this.port.postMessage(message, [object]);
+        });
     }
 }
 

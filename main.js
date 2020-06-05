@@ -1,14 +1,21 @@
 import {Thread} from "./classes/thread.js";
 
 function init() {
-    window.m = new Thread("math");
-    window.r = new Thread("random");
+    window.tunnel = new MessageChannel();
 
-    window.r.init({max: 100, min: 1}).then(() => {
-        window.r.send({type: "get", data: {
-            max: 100,
-            min: 1
-        }}).then(console.log);
+    window.math = new Thread("math");
+    window.random = new Thread("random");
+
+    window.random.init({
+        max: 100,
+        min: 1
+    }).then(() => {
+        Promise.all([
+            window.math.transfer(window.tunnel.port1),
+            window.random.transfer(window.tunnel.port2)
+        ]).then(() => {
+            window.math.send({type: "add"}).then(console.log);
+        });
     });
 }
 
