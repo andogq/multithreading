@@ -1,5 +1,5 @@
-import {Queue} from "/classes/queue.js";
-import {Message} from "/classes/message.js";
+import {Queue} from "./queue.js";
+import {Message} from "./message.js";
 
 class Port {
     constructor(port, incomming) {
@@ -11,21 +11,14 @@ class Port {
         this.port.onmessage = (e) => {
             let message = new Message(e);
 
-            if (typeof this.incomming == "function") {
-                switch (message.type) {
-                    case "response":
-                        if (this.queue.exists(message.id)) {
-                            this.queue.get(message.id)(message);
-                        }
-                        break;
-                    default:
-                        let response = new Message({type: "response", id: message.id});
-                        this.incomming(message, response).then(() => {
-                            this.send(response);
-                        });
-                        break;
-                }
-            } else console.error(`Uncaught message: ${message}`);
+            if (message.type == "response" && this.queue.exists(message.id)) {
+                this.queue.get(message.id)(message);
+            } else if (typeof this.incomming == "function") {
+                let response = new Message({type: "response", id: message.id});
+                this.incomming(message, response).then(() => {
+                    this.send(response);
+                });
+            } else console.error(`Uncaught message: ${JSON.stringify(message)}`);
         }
     }
 

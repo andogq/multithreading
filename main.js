@@ -1,22 +1,9 @@
-import {Port} from "/classes/port.js";
+import {Thread} from "./classes/thread.js";
 
 function init() {
-    let channel = new MessageChannel();
+    window.t = new Thread("math");
 
-    window.p1 = new Port(channel.port1, (message, response) => {
-        return new Promise((resolve) => {
-            console.log(`p1: Incomming message: ${message}`);
-            response.data = "p1 Yeet";
-            resolve();
-        });
-    });
-    window.p2 = new Port(channel.port2, (message, response) => {
-        return new Promise((resolve) => {
-            console.log(`p2: Incomming message: ${message}`);
-            response.data = "p2 Yeet";
-            resolve();
-        });
-    });
+    window.t.send({type: "add", data: {a: 10, b: 11}}).then(console.log);
 }
 
 init();
