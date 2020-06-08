@@ -1,27 +1,17 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 class Message {
-    constructor(arg = {}) {
-        if (arg instanceof Event) {
-            // Event has been passed
-            let e = arg.data;
-
-            this.type = e.type;
-            this.data = e.data;
-            this.id = e.id;
-        } else {
-            // New message being created
-            this.type = arg.type;
-            this.data = arg.data;
-            this.id = arg.id;
-        }
+    constructor(type, id, data) {
+        this.type = type;
+        this.id = id;
+        this.data = data;
     }
-
     respond(data) {
-        return new Message({
-            type: "response",
-            id: this.id,
-            data
-        });
+        return new Message("response", this.id, data);
+    }
+    static fromEvent(e) {
+        let data = e.data;
+        return new Message(data.type, data.id, data.data);
     }
 }
-
-export {Message};
+exports.Message = Message;

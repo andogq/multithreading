@@ -9,7 +9,7 @@ class Port {
         this.queue = new Queue();
 
         this.port.onmessage = (e) => {
-            let message = new Message(e);
+            let message = Message.fromEvent(e);
             let object = e.ports ? e.ports[0] : undefined;
 
             if (message.type == "response" && this.queue.exists(message.id)) {
@@ -33,7 +33,7 @@ class Port {
             out = new Promise((resolve) => {
                 let id = this.queue.add(resolve);
 
-                message = new Message({type: arg.type, id, data: arg.data});
+                message = new Message(arg.type, id, arg.data);
             });
         }
 
@@ -45,7 +45,7 @@ class Port {
         return new Promise((resolve) => {
             let id = this.queue.add(resolve);
 
-            let message = new Message({type: "transfer", id});
+            let message = new Message("transfer", id);
 
             this.port.postMessage(message, [object]);
         });
