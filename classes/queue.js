@@ -1,6 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-class Queue {
+export class Queue {
     constructor() {
         this.queue = {};
     }
@@ -19,4 +17,3 @@ class Queue {
         return this.queue.hasOwnProperty(id);
     }
 }
-exports.Queue = Queue;

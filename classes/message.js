@@ -1,6 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-class Message {
+export class Message {
     constructor(type, id, data) {
         this.type = type;
         this.id = id;
@@ -14,4 +12,3 @@ class Message {
         return new Message(data.type, data.id, data.data);
     }
 }
-exports.Message = Message;
