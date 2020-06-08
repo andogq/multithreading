@@ -1,7 +1,9 @@
-import {Port} from "./port.js";
+import {Port} from "./port";
 
-class Thread extends Port {
-    constructor(name, incomming) {
+export class Thread extends Port {
+    worker: Worker;
+
+    constructor(name: string, incomming: PortIncommingFunction) {
         let worker = new Worker(`/workers/${name}.js`, {type: "module"});
 
         super(worker, incomming);
@@ -9,12 +11,10 @@ class Thread extends Port {
         this.worker = worker;
     }
 
-    init(data) {
+    init(data: any) {
         return this.send({
             type: "init",
             data
         });
     }
 }
-
-export {Thread};

@@ -1,10 +1,14 @@
-import {Queue} from "./queue.js";
-import {Message} from "./message.js";
+import {Queue} from "./queue";
+import {Message} from "./message";
+
+declare global {
+    type PortIncommingFunction = (message: Message, object?: Transferable) => Promise<any>;
+}
 
 export class Port {
-    queue: Queue;
+    queue: Queue<(data: any) => void>;
 
-    constructor(public port: Worker | MessagePort, public incomming: (message: Message, object?: Transferable) => Promise<any>) {
+    constructor(public port: Worker | MessagePort, public incomming: PortIncommingFunction) {
         this.queue = new Queue();
 
         this.port.onmessage = (e) => {
@@ -14,14 +18,14 @@ export class Port {
             if (message.type == "response" && this.queue.exists(message.id)) {
                 this.queue.get(message.id)(message.data);
             } else if (typeof this.incomming == "function") {
-                this.incomming(message, object).then((data) => {
+                this.incomming(message, object).then((data: any) => {
                     this.send(message.respond(data));
                 });
             } else console.error(`Uncaught message: ${JSON.stringify(message)}`);
         }
     }
 
-    send(arg: {type: string, id: string, data?: any} | Message) {
+    send(arg: {type: string, data?: any} | Message) {
         let message: Message;
         let out: Promise<any>;
 
