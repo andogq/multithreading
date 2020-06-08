@@ -1,7 +1,7 @@
 export class Message {
     constructor(public type: string, public id: string, public data?: any) {}
 
-    respond(data) {
+    respond(data: any) {
         return new Message("response", this.id, data);
     }
 

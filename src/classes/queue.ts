@@ -1,5 +1,5 @@
 export class Queue {
-    queue: object;
+    queue: {[index: string]: any};
 
     constructor() {
         this.queue = {};
