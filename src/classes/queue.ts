@@ -1,11 +1,11 @@
-export class Queue {
-    queue: {[index: string]: any};
+export class Queue<T> {
+    queue: {[index: string]: T};
 
     constructor() {
         this.queue = {};
     }
 
-    add(item: any): string {
+    add(item: T): string {
         let id;
 
         do {
@@ -17,7 +17,7 @@ export class Queue {
         return id;
     }
 
-    get(id: string): any {
+    get(id: string): T {
         return this.queue[id];
     }
 
